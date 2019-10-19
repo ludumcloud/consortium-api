@@ -3,6 +3,7 @@ import * as jwt from 'jsonwebtoken';
 import { User } from '../models/User';
 import { LoginRequest, SignUpRequest } from '../schemas';
 import { createSalt, hashPassword, passwordEqual, signature } from '../utils/authenticationHelper';
+import logger from '../utils/log';
 
 @Controller('/v1/auth')
 export default class AuthController {
@@ -10,7 +11,14 @@ export default class AuthController {
   @Post('/login')
   public async login (@Body() body: LoginRequest): Promise<void> {
     const { email, password } = body;
-    const userRecord = await User.findOne({ email });
+
+    let userRecord: User;
+    try {
+      userRecord = await User.findOne({ email });
+    } catch (error) {
+      logger.error('Failed to fetch user when logging in', error);
+      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     if (!userRecord) {
       throw new HttpException('Invalid username or password', HttpStatus.BAD_REQUEST);
@@ -48,7 +56,12 @@ export default class AuthController {
     user.password = hashedPassword;
     user.name = name;
 
-    await user.save();
+    try {
+      await user.save();
+    } catch (error) {
+      logger.error('Failed to create user when attempting signup', error);
+      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     return {
       email: user.email,
