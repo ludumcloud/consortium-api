@@ -1,5 +1,5 @@
-import { NestApplication, NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestApplication, NestFactory } from '@nestjs/core';
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import { RestModule } from './RestModule';
