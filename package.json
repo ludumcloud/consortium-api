@@ -8,7 +8,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "node ./dist/main.js",
+    "start": "LOCAL=true node ./dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest"
   },
@@ -39,6 +39,7 @@
     "@types/supertest": "^2.0.8",
     "jest": "^24.9.0",
     "prettier": "^1.18.2",
+    "sqlite3": "^4.1.0",
     "supertest": "^4.0.2",
     "ts-jest": "^24.1.0",
     "ts-loader": "^6.1.1",

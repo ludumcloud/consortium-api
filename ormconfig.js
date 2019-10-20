@@ -1,10 +1,15 @@
-{
-  "type": "postgres",
+const runningLocal = Boolean(process.env.LOCAL);
+
+const type = runningLocal ? "sqlite" : "postgres";
+const database = runningLocal ? "./db.sqlite" : "consortium";
+
+module.exports = {
+  "type": type,
   "host": "localhost",
   "port": 5432,
   "username": "test",
   "password": "test",
-  "database": "consortium",
+  "database": database,
   "synchronize": true,
   "logging": false,
   "entities": [
@@ -21,4 +26,4 @@
     "migrationsDir": "src/migration",
     "subscribersDir": "src/subscriber"
   }
-}
+};
