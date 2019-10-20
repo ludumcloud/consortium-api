@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn  } from 'typeorm';
-import { Biomes } from '../types/map';
+import { Biomes } from '../utils/mapHelpers';
 import HexagonalGrid from './HexagonalGrid';
 
 @Entity()
