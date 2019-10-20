@@ -1,6 +1,6 @@
-import LoginRequest from './LoginRequest';
+import LoginRequest from './AuthRoutes/LoginRequest';
+import SignUpRequest from './AuthRoutes/SignUpRequest';
 import CreateRequest from './MapRoutes/CreateRequest';
-import SignUpRequest from './SignUpRequest';
 
 export {
   CreateRequest,
