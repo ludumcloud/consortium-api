@@ -1,6 +1,6 @@
 import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { User } from '../models/User';
+import User from '../models/User';
 import { LoginRequest, SignUpRequest } from '../schemas';
 import { createSalt, hashPassword, passwordEqual, signature } from '../utils/authenticationHelper';
 import logger from '../utils/log';
