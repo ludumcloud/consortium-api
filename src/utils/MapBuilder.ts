@@ -97,10 +97,3 @@ export default class MapBuilder {
     return hexagonalGrid;
   }
 }
-
-const builder = new MapBuilder();
-builder
-.setWidth(7)
-.setHeight(7)
-.setExponent(5)
-.build();
