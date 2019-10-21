@@ -1,5 +1,5 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn  } from 'typeorm';
-import { Biomes } from '../utils/mapHelpers';
+import { Terrain } from '../utils/mapHelpers';
 import HexagonalGrid from './HexagonalGrid';
 
 @Entity()
@@ -17,8 +17,8 @@ export default class Tile extends BaseEntity {
   @Column()
   z: number;
 
-  @Column()
-  type: Biomes;
+  @Column('json')
+  terrain: Terrain;
 
   @ManyToOne(() => HexagonalGrid, grid => grid.id)
   grid: HexagonalGrid;

@@ -66,7 +66,7 @@ export default class MapBuilder {
         };
         const elevation = elevationGenerator.calculate(generatorOptions);
         const moisture = moistureGenerator.calculate(generatorOptions);
-        hex.biome = calculateBiome(elevation, moisture);
+        hex.terrain = calculateBiome(elevation, moisture);
       }
     }
 
@@ -78,9 +78,9 @@ export default class MapBuilder {
 
   private convertToORM (grid: Honeycomb.Grid, seed, width, height): HexagonalGrid {
     const tiles: Tile[] = grid.map((hex: Honeycomb.Hex<any>): Tile => {
-      const {q, r, s} = Hex().cartesianToCube(hex.x, hex.y);
+      const { q, r, s } = Hex().cartesianToCube(hex.x, hex.y);
       const tile = new Tile();
-      tile.type = hex.biome;
+      tile.terrain = hex.terrain;
       tile.x = q;
       tile.y = s;
       tile.z = r;

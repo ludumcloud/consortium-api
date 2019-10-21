@@ -1,10 +1,10 @@
+import 'reflect-metadata';
+
 import { ValidationPipe } from '@nestjs/common';
 import { NestApplication, NestFactory } from '@nestjs/core';
 import * as cors from 'cors';
 import * as helmet from 'helmet';
-import 'reflect-metadata';
 import { createConnection } from 'typeorm';
-
 import { RestModule } from './RestModule';
 import logger from './utils/log';
 

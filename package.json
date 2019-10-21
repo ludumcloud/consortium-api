@@ -8,7 +8,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "LOCAL=true node ./dist/main.js",
+    "start": "node ./dist/main.js",
     "lint": "tslint -p tsconfig.json -c tslint.json",
     "test": "jest"
   },
