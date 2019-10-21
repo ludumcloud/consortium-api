@@ -1,12 +1,20 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestApplication, NestFactory } from '@nestjs/core';
+import * as cors from 'cors';
+import * as helmet from 'helmet';
 import 'reflect-metadata';
 import { createConnection } from 'typeorm';
+
 import { RestModule } from './RestModule';
 import logger from './utils/log';
 
 async function bootstrap () {
   const app: NestApplication = await NestFactory.create(RestModule);
+  app.use(helmet());
+  app.use(cors({
+      origin: true,
+      methods: ['GET', 'PUT', 'POST']
+  }));
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true
   }));
