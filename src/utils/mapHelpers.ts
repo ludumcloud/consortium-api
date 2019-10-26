@@ -1,34 +1,39 @@
-export enum Mountains {
-  Bare = 'bare',
-  Rocky = 'rocky',
-  Tundra = 'tundra',
-  Snow = 'snow'
+import * as crypto from 'crypto';
+import * as util from 'util';
+import Tile from '../models/Tile';
+import { Depressions, Hills, Mountains, Plains, Terrain } from '../types/terrain';
+import NoiseGenerator, { NoiseGeneratorOptions } from './NoiseGenerator';
+
+const randomBytes = util.promisify(crypto.randomBytes);
+
+export function generateSeed (): Promise<string> {
+  return randomBytes(128).then((buffer: Buffer) => buffer.toString('hex'));
 }
 
-export enum Hills {
-  Temperate = 'temperate',
-  Shrubland = 'shrubland',
-  RainForest = 'rainforest',
-  Forest = 'forest'
-}
+export function generateTile (x: number, y: number, width: number, height: number, exponent: number, seed: string): Tile {
+  // split the seed in half, one part for elevation the other moisture
+  const length: number = seed.length / 2;
+  const elevationGenerator: NoiseGenerator = new NoiseGenerator(seed.slice(0, length));
+  const moistureGenerator: NoiseGenerator = new NoiseGenerator(seed.slice(length));
 
-export enum Plains {
-  Temperate = 'temperate',
-  Grassland = 'grassland',
-  Forest = 'forest',
-  RainForest = 'rainforest'
-}
+  const generatorOptions: NoiseGeneratorOptions = {
+    x,
+    y,
+    width,
+    height,
+    exponent
+  };
+  const elevation: number = elevationGenerator.calculate(generatorOptions);
+  const moisture: number = moistureGenerator.calculate(generatorOptions);
+  const terrain: Terrain = calculateBiome(elevation, moisture);
 
-export enum Depressions {
-  Beach = 'beach',
-  Ocean = 'ocean'
-}
+  const tile = new Tile();
+  tile.x = x;
+  tile.y = y;
+  tile.landform = terrain.landform;
+  tile.biome = terrain.biome;
 
-export type Landform = 'Mountain' | 'Hill' | 'Plain' | 'Depression';
-
-export interface Terrain {
-  landform: Landform;
-  biome: Mountains | Hills | Plains | Depressions;
+  return tile;
 }
 
 export function calculateBiome (elevation: number, moisture: number): Terrain {

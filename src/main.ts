@@ -16,7 +16,8 @@ async function bootstrap () {
       methods: ['GET', 'PUT', 'POST']
   }));
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true
+    whitelist: true,
+    transform: true
   }));
 
   await app.listen(3000);

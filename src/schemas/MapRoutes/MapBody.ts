@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, IsString } from 'class-validator';
 
-export default class CreateRequest {
+export default class MapBody {
   @IsOptional()
   @IsNumber()
   width: number;
@@ -12,4 +12,8 @@ export default class CreateRequest {
   @IsOptional()
   @IsString()
   seed: string;
+
+  @IsOptional()
+  @IsNumber()
+  exponent: number;
 }

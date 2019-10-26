@@ -1,12 +1,18 @@
 import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
 import User from '../models/User';
+import UserRepository from '../repositories/UserRepository';
 import { LoginRequest, SignUpRequest } from '../schemas';
 import { createSalt, hashPassword, passwordEqual, signature } from '../utils/authenticationHelper';
 import logger from '../utils/log';
 
 @Controller('/v1/auth')
 export default class AuthController {
+  private readonly userRepository: UserRepository;
+
+  constructor (userRepository: UserRepository) {
+    this.userRepository = userRepository;
+  }
 
   @Post('/login')
   public async login (@Body() body: LoginRequest): Promise<void> {
@@ -14,7 +20,7 @@ export default class AuthController {
 
     let userRecord: User;
     try {
-      userRecord = await User.findOne({ email });
+      userRecord = await this.userRepository.findByEmail(email);
     } catch (error) {
       logger.error('Failed to fetch user when logging in', error);
       throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -42,22 +48,15 @@ export default class AuthController {
   public async signUp (@Body() body: SignUpRequest): Promise<object> {
     const { username, email, password, name } = body;
 
-    let user = await User.findOne({ email });
+    let user = await this.userRepository.findByEmail(email);
     if (user) {
       throw new HttpException(`The following email address is not valid ${email}`, HttpStatus.BAD_REQUEST);
     }
     const salt = await createSalt();
     const hashedPassword: string = await hashPassword(password, salt);
 
-    user = new User();
-    user.email = email;
-    user.username = username;
-    user.salt = salt;
-    user.password = hashedPassword;
-    user.name = name;
-
     try {
-      await user.save();
+      user = await this.userRepository.createUser(email, username, salt, hashedPassword, name);
     } catch (error) {
       logger.error('Failed to create user when attempting signup', error);
       throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);

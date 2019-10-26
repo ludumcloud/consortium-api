@@ -1,9 +1,9 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn  } from 'typeorm';
-import { Terrain } from '../utils/mapHelpers';
-import HexagonalGrid from './HexagonalGrid';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Biome, Landform } from '../types/terrain';
+import Grid from './Grid';
 
 @Entity()
-export default class Tile extends BaseEntity {
+export default class Tile {
 
   @PrimaryGeneratedColumn()
   id: number;
@@ -14,12 +14,12 @@ export default class Tile extends BaseEntity {
   @Column()
   y: number;
 
-  @Column()
-  z: number;
+  @Column({ nullable: true })
+  landform: Landform;
 
-  @Column('json')
-  terrain: Terrain;
+  @Column({ nullable: true })
+  biome: Biome;
 
-  @ManyToOne(() => HexagonalGrid, grid => grid.id)
-  grid: HexagonalGrid;
+  @ManyToOne(() => Grid, grid => grid.tiles)
+  grid: Grid;
 }
