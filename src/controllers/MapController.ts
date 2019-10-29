@@ -61,14 +61,15 @@ export default class MapController {
         const missingTile: boolean = !_.find(tiles, { x: i, y: j });
         if (missingTile) {
           missingTiles.push(
-            generateTile(i, j, width, height, exponent, seed)
+            generateTile(grid, i, j, width, height, exponent, seed)
           );
         }
       }
     }
 
+    const createdTiles: Tile[] = await this.tileRepository.createTiles(missingTiles);
     return tiles.concat(
-      await this.tileRepository.createTiles(missingTiles)
+      createdTiles.map((tile: Tile) => _.omit(tile, ['id', '__grid__', '__has_grid__']))
     );
   }
 }

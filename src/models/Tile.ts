@@ -20,6 +20,8 @@ export default class Tile {
   @Column({ nullable: true })
   biome: Biome;
 
-  @ManyToOne(() => Grid, grid => grid.tiles)
-  grid: Grid;
+  @ManyToOne(() => Grid, grid => grid.tiles, {
+    eager: false
+  })
+  grid: Promise<Grid>;
 }
