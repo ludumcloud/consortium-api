@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Biome, Landform } from '../types/terrain';
-import Grid from './Grid';
+import Map from './Map';
 
 @Entity()
 export default class Tile {
@@ -20,8 +20,9 @@ export default class Tile {
   @Column({ nullable: true })
   biome: Biome;
 
-  @ManyToOne(() => Grid, grid => grid.tiles, {
+  @ManyToOne(() => Map, map => map.tiles, {
     eager: false
   })
-  grid: Promise<Grid>;
+
+  map: Promise<Map>;
 }

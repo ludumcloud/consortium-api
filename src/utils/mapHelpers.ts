@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 import * as util from 'util';
-import Grid from '../models/Grid';
+import Grid from '../models/Map';
 import Tile from '../models/Tile';
 import { Depressions, Hills, Mountains, Plains, Terrain } from '../types/terrain';
 import NoiseGenerator, { NoiseGeneratorOptions } from './NoiseGenerator';

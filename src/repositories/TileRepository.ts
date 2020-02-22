@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Any, getRepository, Repository, } from 'typeorm';
-import Grid from '../models/Grid';
+import Grid from '../models/Map';
 import Tile from '../models/Tile';
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Tile from './Tile';
 
 @Entity()
-export default class Grid {
+export default class Map {
 
   @PrimaryGeneratedColumn()
   public id: number;
@@ -19,7 +19,7 @@ export default class Grid {
   @Column({ nullable: true })
   public exponent: number;
 
-  @OneToMany(() => Tile, tile => tile.grid, {
+  @OneToMany(() => Tile, tile => tile.map, {
     eager: false
   })
   public tiles: Promise<Tile[]>;
