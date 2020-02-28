@@ -15,6 +15,6 @@ export default class ParticipantRepository {
     const participant: Participant = new Participant();
     participant.user = user;
 
-    return this.participantRepository.create(participant);
+    return this.participantRepository.save(participant);
   }
 }

@@ -20,7 +20,7 @@ export default class TileRepository {
     tile.biome = tileOptions.biome;
     tile.map = Promise.resolve(tileOptions.map);
 
-    return this.tileRepository.create(tile);
+    return this.tileRepository.save(tile);
   }
 }
 

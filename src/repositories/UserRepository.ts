@@ -18,7 +18,7 @@ export default class UserRepository {
     user.password = hashedPassword;
     user.name = name;
 
-    return this.repository.create(user);
+    return this.repository.save(user);
   }
 
   public async findByEmail (email: string): Promise<User> {

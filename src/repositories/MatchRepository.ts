@@ -12,10 +12,15 @@ export default class MatchRepository {
     this.matchRepository = getRepository(Match);
   }
 
-  public createMatch (participants: Participant[], map: Map) {
+  public createMatch (participants: Participant[], map: Map): Promise<Match> {
     const match = new Match();
-    match.map = map;
+    match.map = Promise.resolve(map);
     match.participants = participants;
-    return this.matchRepository.create(match);
+
+    return this.matchRepository.save(match);
+  }
+
+  public findMatch (id: number): Promise<Match> {
+    return this.matchRepository.findOne(id);
   }
 }

@@ -36,4 +36,8 @@ export default class MatchService {
     const map: Map = await this.mapService.createMap({});
     return this.matchRepository.createMatch(participants, map);
   }
+
+  public async fetchMatch (id: number): Promise<Match> {
+    return this.matchRepository.findMatch(id);
+  }
 }

@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import Match from '../models/Match';
 import { CreateMatchRequest } from '../schemas';
 import MatchService from '../services/MatchService';
 
@@ -17,8 +18,8 @@ export default class MatchController {
     return this.matchService.createMatch(participants);
   }
 
-  @Get()
-  public async getMatches (): Promise<void> {
-    return;
+  @Get('/:id')
+  public async getMatch (@Param() params): Promise<Match> {
+    return this.matchService.fetchMatch(params.id);
   }
 }

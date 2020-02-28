@@ -14,8 +14,9 @@ export default class Match {
   public participants: Participant[];
 
   @OneToOne(() => Map, (map) => map.match, {
-    cascade: true
+    cascade: true,
+    eager: false
   })
   @JoinColumn()
-  public map: Map;
+  public map: Promise<Map>;
 }

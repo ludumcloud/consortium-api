@@ -18,7 +18,7 @@ export default class MapRepository {
     map.exponent = exponent;
     map.seed = seed;
 
-    return this.mapRepository.create(map);
+    return this.mapRepository.save(map);
   }
 
   public async addTilesToMap (map: Map, tiles: Tile[]): Promise<Map> {
