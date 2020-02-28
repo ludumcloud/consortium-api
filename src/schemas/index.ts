@@ -1,11 +1,9 @@
 import LoginRequest from './AuthRoutes/LoginRequest';
 import SignUpRequest from './AuthRoutes/SignUpRequest';
-import MapBody from './MapRoutes/MapBody';
-import TilesQuery from './MapRoutes/TilesQuery';
+import CreateMatchRequest from './MatchRoutes/CreateMatchRequest';
 
 export {
-  MapBody,
+  CreateMatchRequest,
   LoginRequest,
-  SignUpRequest,
-  TilesQuery
+  SignUpRequest
 };

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { getRepository, Repository } from 'typeorm';
 import Map from '../models/Map';
+import Tile from '../models/Tile';
 
 @Injectable()
 export default class MapRepository {
@@ -17,6 +18,11 @@ export default class MapRepository {
     map.exponent = exponent;
     map.seed = seed;
 
+    return this.mapRepository.create(map);
+  }
+
+  public async addTilesToMap (map: Map, tiles: Tile[]): Promise<Map> {
+    map.tiles = Promise.resolve(tiles);
     return this.mapRepository.save(map);
   }
 

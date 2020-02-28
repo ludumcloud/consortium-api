@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import Participant from './Participant';
 
 @Entity()
 export default class User {
@@ -20,4 +21,9 @@ export default class User {
 
   @Column()
   public name: string;
+
+  @OneToMany(() => Participant, participant => participant.user, {
+    eager: false
+  })
+  participants: Promise<Participant[]> ;
 }

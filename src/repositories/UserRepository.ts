@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,  } from '@nestjs/common';
 import { getRepository, Repository } from 'typeorm';
 import User from '../models/User';
 
@@ -10,11 +10,7 @@ export default class UserRepository {
     this.repository = getRepository(User);
   }
 
-  async findByEmail (email: string): Promise<User> {
-    return this.repository.findOne({ email });
-  }
-
-  async createUser (email: string, username: string, salt: string, hashedPassword: string, name: string): Promise<User> {
+  public async createUser (email: string, username: string, salt: string, hashedPassword: string, name: string): Promise<User> {
     const user = new User();
     user.email = email;
     user.username = username;
@@ -22,6 +18,18 @@ export default class UserRepository {
     user.password = hashedPassword;
     user.name = name;
 
-    return this.repository.save(user);
+    return this.repository.create(user);
+  }
+
+  public async findByEmail (email: string): Promise<User> {
+    return this.repository.findOne({ email });
+  }
+
+  public async fetchUserById (id: number): Promise<User> {
+    return this.repository.findOne({ id });
+  }
+
+  public async fetchUsersById (ids: number[]): Promise<User[]> {
+    return this.repository.findByIds(ids);
   }
 }

@@ -1,29 +1,17 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import AuthController from './controllers/AuthController';
-import MapController from './controllers/MapController';
-import MapMiddleware from './middleware/MapMiddleware';
-import MapRepository from './repositories/MapRepository';
-import TileRepository from './repositories/TileRepository';
-import UserRepository from './repositories/UserRepository';
+import MatchController from './controllers/MatchController';
+import { RepositoryModule } from './repositories';
+import { ServicesModule } from './services';
 
 @Module({
-  imports: [],
+  imports: [
+    RepositoryModule,
+    ServicesModule
+  ],
   controllers: [
     AuthController,
-    MapController
-  ],
-  providers: [
-    UserRepository,
-    MapRepository,
-    TileRepository
-  ],
+    MatchController
+  ]
 })
-export class RestModule implements NestModule {
-  configure (consumer: MiddlewareConsumer) {
-    consumer
-      .apply(MapMiddleware)
-      .forRoutes(
-{ path: '/v1/map/:id/tiles', method: RequestMethod.GET }
-      );
-  }
-}
+export class RestModule {}

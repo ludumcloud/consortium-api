@@ -1,4 +1,5 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import Match from './Match';
 import Tile from './Tile';
 
 @Entity()
@@ -23,4 +24,9 @@ export default class Map {
     eager: false
   })
   public tiles: Promise<Tile[]>;
+
+  @OneToOne(() => Match, match => match.map, {
+    eager: false
+  })
+  public match: Promise<Match>;
 }

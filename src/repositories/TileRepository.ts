@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Any, getRepository, Repository, } from 'typeorm';
-import Grid from '../models/Map';
+import { getRepository, Repository, } from 'typeorm';
+import Map from '../models/Map';
 import Tile from '../models/Tile';
+import { Biome, Landform } from '../types/terrain';
 
 @Injectable()
 export default class TileRepository {
@@ -11,20 +12,22 @@ export default class TileRepository {
     this.tileRepository = getRepository(Tile);
   }
 
-  async fetchTilesByRange (grid: Grid, startX: number, endX: number, startY: number, endY: number): Promise<Tile[]> {
-    const xValues: number[] = Array(endX - startX + 1).fill(undefined).map((value, idx) => startX + idx);
-    const yValues: number[] = Array(endY - startY + 1 ).fill(undefined).map((value, idx) => startY + idx);
-    return this.tileRepository.find({
-      select: ['x', 'y', 'landform', 'biome'],
-      where: {
-        grid,
-        x: Any(xValues),
-        y: Any(yValues)
-      }
-    });
-  }
+  async createTile (tileOptions: TileCreationOptions): Promise<Tile> {
+    const tile: Tile = new Tile();
+    tile.x = tileOptions.x;
+    tile.y = tileOptions.y;
+    tile.landform = tileOptions.landform;
+    tile.biome = tileOptions.biome;
+    tile.map = Promise.resolve(tileOptions.map);
 
-  async createTiles (tile: Tile[]): Promise<Tile[]> {
-    return this.tileRepository.save(tile);
+    return this.tileRepository.create(tile);
   }
+}
+
+export interface TileCreationOptions  {
+  x: number;
+  y: number;
+  landform: Landform;
+  biome: Biome;
+  map?: Map;
 }

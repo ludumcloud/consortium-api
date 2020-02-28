@@ -1,7 +1,6 @@
 import * as crypto from 'crypto';
 import * as util from 'util';
-import Grid from '../models/Map';
-import Tile from '../models/Tile';
+import { TileCreationOptions } from '../repositories/TileRepository';
 import { Depressions, Hills, Mountains, Plains, Terrain } from '../types/terrain';
 import NoiseGenerator, { NoiseGeneratorOptions } from './NoiseGenerator';
 
@@ -11,7 +10,7 @@ export function generateSeed (): Promise<string> {
   return randomBytes(128).then((buffer: Buffer) => buffer.toString('hex'));
 }
 
-export function generateTile (grid: Grid, x: number, y: number, width: number, height: number, exponent: number, seed: string): Tile {
+export function generateTile (x: number, y: number, width: number, height: number, exponent: number, seed: string): TileCreationOptions {
   // split the seed in half, one part for elevation the other moisture
   const length: number = seed.length / 2;
   const elevationGenerator: NoiseGenerator = new NoiseGenerator(seed.slice(0, length));
@@ -28,14 +27,12 @@ export function generateTile (grid: Grid, x: number, y: number, width: number, h
   const moisture: number = moistureGenerator.calculate(generatorOptions);
   const terrain: Terrain = calculateBiome(elevation, moisture);
 
-  const tile = new Tile();
-  tile.grid = Promise.resolve(grid);
-  tile.x = x;
-  tile.y = y;
-  tile.landform = terrain.landform;
-  tile.biome = terrain.biome;
-
-  return tile;
+  return {
+    biome: terrain.biome,
+    landform: terrain.landform,
+    x,
+    y
+  };
 }
 
 export function calculateBiome (elevation: number, moisture: number): Terrain {
