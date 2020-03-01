@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import Map from './Map';
 import Participant from './Participant';
 
@@ -8,8 +8,9 @@ export default class Match {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @ManyToOne(() => Participant, participant => participant.match, {
+  @OneToMany(() => Participant, participant => participant.match, {
     cascade: true,
+    eager: true
   })
   public participants: Participant[];
 

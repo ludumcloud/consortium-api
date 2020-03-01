@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, Param, Post, UseInterceptors } from '@nestjs/common';
 import Match from '../models/Match';
 import { CreateMatchRequest } from '../schemas';
 import MatchService from '../services/MatchService';
@@ -12,14 +12,16 @@ export default class MatchController {
   }
 
   @Post()
-  public async createMatch (@Body() body: CreateMatchRequest): Promise<any> {
+  @UseInterceptors(ClassSerializerInterceptor)
+  public async createMatch (@Body() body: CreateMatchRequest): Promise<Match> {
     const participants: number[] = body.participants;
 
-    return this.matchService.createMatch(participants);
+    const match: Match = await this.matchService.createMatch(participants);
+    return this.matchService.findMatch(match.id);
   }
 
   @Get('/:id')
   public async getMatch (@Param() params): Promise<Match> {
-    return this.matchService.fetchMatch(params.id);
+    return this.matchService.findMatch(params.id);
   }
 }

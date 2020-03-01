@@ -10,29 +10,33 @@ export function generateSeed (): Promise<string> {
   return randomBytes(128).then((buffer: Buffer) => buffer.toString('hex'));
 }
 
-export function generateTile (x: number, y: number, width: number, height: number, exponent: number, seed: string): TileCreationOptions {
-  // split the seed in half, one part for elevation the other moisture
-  const length: number = seed.length / 2;
-  const elevationGenerator: NoiseGenerator = new NoiseGenerator(seed.slice(0, length));
-  const moistureGenerator: NoiseGenerator = new NoiseGenerator(seed.slice(length));
+export function generateTile (x: number, y: number, width: number, height: number, exponent: number, seed: string): Promise<TileCreationOptions> {
+  return new Promise((resolve) => {
+    // split the seed in half, one part for elevation the other moisture
+    const length: number = seed.length / 2;
+    const elevationGenerator: NoiseGenerator = new NoiseGenerator(seed.slice(0, length));
+    const moistureGenerator: NoiseGenerator = new NoiseGenerator(seed.slice(length));
 
-  const generatorOptions: NoiseGeneratorOptions = {
-    x,
-    y,
-    width,
-    height,
-    exponent
-  };
-  const elevation: number = elevationGenerator.calculate(generatorOptions);
-  const moisture: number = moistureGenerator.calculate(generatorOptions);
-  const terrain: Terrain = calculateBiome(elevation, moisture);
+    const generatorOptions: NoiseGeneratorOptions = {
+      x,
+      y,
+      width,
+      height,
+      exponent
+    };
+    const elevation: number = elevationGenerator.calculate(generatorOptions);
+    const moisture: number = moistureGenerator.calculate(generatorOptions);
+    const terrain: Terrain = calculateBiome(elevation, moisture);
+    const tileOptions: TileCreationOptions = {
+      biome: terrain.biome,
+      landform: terrain.landform,
+      x,
+      y
+    };
 
-  return {
-    biome: terrain.biome,
-    landform: terrain.landform,
-    x,
-    y
-  };
+    // Delay the resolution of the tile to the next tick of the event loop
+    return setTimeout(resolve.bind(this, tileOptions), 0);
+  });
 }
 
 export function calculateBiome (elevation: number, moisture: number): Terrain {

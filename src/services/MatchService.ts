@@ -37,7 +37,12 @@ export default class MatchService {
     return this.matchRepository.createMatch(participants, map);
   }
 
-  public async fetchMatch (id: number): Promise<Match> {
-    return this.matchRepository.findMatch(id);
+  public async findMatch (id: number): Promise<Match> {
+    const match: Match = await this.matchRepository.findMatch(id);
+    const map: Map = await match.map;
+    await match.participants;
+    await map.tiles;
+
+    return match;
   }
 }

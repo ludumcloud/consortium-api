@@ -9,13 +9,14 @@ export default class Participant {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @OneToMany(() => Match, match => match.participants, {
+  @ManyToOne(() => Match, match => match.participants, {
     eager: false
   })
   public match: Promise<Match>;
 
   @ManyToOne(() => User, user => user.participants, {
-    cascade: true
+    cascade: true,
+    eager: true
   })
   public user: User;
 

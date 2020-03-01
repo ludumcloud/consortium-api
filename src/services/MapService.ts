@@ -35,20 +35,20 @@ export default class MapService {
     // create the map without the tiles so the tiles can have a reference to the map when we create them
     const map: Map = await this.mapRepository.createMap(width, height, seed, exponent);
 
-    const tileOptions: TileCreationOptions[] = this.createTilesOptions(width, height, seed, exponent);
+    const tileOptions: TileCreationOptions[] = await this.createTilesOptions(width, height, seed, exponent);
     const tilePromises: Array<Promise<Tile>> = tileOptions.map((options): Promise<Tile> => {
       return this.tileRepository.createTile({...options, map});
     });
-    const tiles: Tile[] = await Promise.all(tilePromises);
-    // REMOVE THIS LATER ON DUE TO CASCADE
-    return this.mapRepository.addTilesToMap(map, tiles);
+    await Promise.all(tilePromises);
+
+    return map;
   }
 
-  private createTilesOptions (width: number, height: number, seed: string, exponent: number): TileCreationOptions[] {
+  private async createTilesOptions (width: number, height: number, seed: string, exponent: number): Promise<TileCreationOptions[]> {
     const tileOptions: TileCreationOptions[] = [];
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
-        tileOptions.push(generateTile(x, y, width, height, exponent, seed));
+        tileOptions.push(await generateTile(x, y, width, height, exponent, seed));
       }
     }
     return tileOptions;

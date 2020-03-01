@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import Participant from './Participant';
 
@@ -10,12 +11,15 @@ export default class User {
   @Column()
   public username: string;
 
+  @Exclude()
   @Column()
   public email: string;
 
+  @Exclude()
   @Column()
   public password: string;
 
+  @Exclude()
   @Column()
   public salt: string;
 

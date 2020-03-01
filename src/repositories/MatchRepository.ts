@@ -20,7 +20,7 @@ export default class MatchRepository {
     return this.matchRepository.save(match);
   }
 
-  public findMatch (id: number): Promise<Match> {
+  public async findMatch (id: number): Promise<Match> {
     return this.matchRepository.findOne(id);
   }
 }

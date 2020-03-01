@@ -16,6 +16,7 @@
     "@nestjs/common": "^6.7.2",
     "@nestjs/core": "^6.7.2",
     "@nestjs/platform-express": "^6.7.2",
+    "@nestjs/platform-fastify": "^6.11.8",
     "class-transformer": "^0.2.3",
     "class-validator": "^0.10.2",
     "cors": "^2.8.5",
