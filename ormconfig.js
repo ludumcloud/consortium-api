@@ -29,7 +29,7 @@ module.exports = {
   password: password,
   database: database,
   synchronize: true,
-  logging: true,
+  logging: false,
   entities: ['dist/models/**/*.js'],
   migrations: ['dist/migration/**/*.js'],
   subscribers: ['dist/subscriber/**/*.js'],

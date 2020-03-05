@@ -6,7 +6,7 @@ import User from '../models/User';
 import MatchRepository from '../repositories/MatchRepository';
 import ParticipantRepository from '../repositories/ParticipantRepository';
 import UserRepository from '../repositories/UserRepository';
-import MapService from './MapService';
+import MapService, { MapCreationOptions } from './MapService';
 
 @Injectable()
 export default class MatchService {
@@ -27,20 +27,19 @@ export default class MatchService {
     this.mapService = mapService;
   }
 
-  public async createMatch (participantIds: number[]): Promise<Match> {
+  public async createMatch (participantIds: number[], mapOptions?: MapCreationOptions): Promise<Match> {
     const users: User[] = await this.userRepository.fetchUsersById(participantIds);
     const participants: Participant[] = await Promise.all(users.map((user) =>
       this.participantRepository.createParticipant(user)
     ));
 
-    const map: Map = await this.mapService.createMap({});
+    const map: Map = await this.mapService.createMap(mapOptions);
     return this.matchRepository.createMatch(participants, map);
   }
 
   public async findMatch (id: number): Promise<Match> {
     const match: Match = await this.matchRepository.findMatch(id);
     const map: Map = await match.map;
-    await match.participants;
     await map.tiles;
 
     return match;

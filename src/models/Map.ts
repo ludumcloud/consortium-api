@@ -17,7 +17,7 @@ export default class Map {
   @Column()
   public seed: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'float', nullable: true })
   public exponent: number;
 
   @OneToMany(() => Tile, tile => tile.map, {

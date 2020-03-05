@@ -8,7 +8,7 @@ import { createConnection } from 'typeorm';
 import { RestModule } from './RestModule';
 import logger from './utils/log';
 
-async function bootstrap () {
+async function bootstrap (port: number) {
   const app: NestApplication = await NestFactory.create(RestModule);
   app.use(helmet());
   app.use(cors({
@@ -20,10 +20,7 @@ async function bootstrap () {
     transform: true
   }));
 
-  let port = process.env.PORT || 3000;
-
-  console.log("STARTING ON PORT:", port);
-
+  logger.debug(`Starting on port: ${port}`);
   await app.listen(port);
 }
 
@@ -32,4 +29,8 @@ createConnection()
     logger.error('Failed to create database connection', error);
     throw error;
   })
-  .then(() => bootstrap());
+  .then(() => {
+    // TODO: create helper to parse env params instead of doing it inline
+    const port: number = parseInt(process.env.PORT, 10) || 3000;
+    return bootstrap(port);
+  });
