@@ -20,7 +20,11 @@ async function bootstrap () {
     transform: true
   }));
 
-  await app.listen(3000);
+  let port = process.env.PORT || 3000;
+
+  console.log("STARTING ON PORT:", port);
+
+  await app.listen(port);
 }
 
 createConnection()
