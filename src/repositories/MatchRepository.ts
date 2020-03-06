@@ -23,4 +23,8 @@ export default class MatchRepository {
   public async findMatch (id: number): Promise<Match> {
     return this.matchRepository.findOne(id);
   }
+
+  public async findMany (): Promise<Match[]> {
+    return this.matchRepository.find();
+  }
 }

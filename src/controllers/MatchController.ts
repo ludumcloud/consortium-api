@@ -25,7 +25,14 @@ export default class MatchController {
     return this.matchService.findMatch(match.id);
   }
 
+  @Get()
+  @UseInterceptors(ClassSerializerInterceptor)
+  public async getAllMatches (): Promise<Match[]> {
+    return this.matchService.findAllMatches();
+  }
+
   @Get('/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
   public async getMatch (@Param() params): Promise<Match> {
     return this.matchService.findMatch(params.id);
   }

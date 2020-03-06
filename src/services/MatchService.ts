@@ -44,4 +44,8 @@ export default class MatchService {
 
     return match;
   }
+
+  public async findAllMatches (): Promise<Match[]> {
+    return this.matchRepository.findMany();
+  }
 }
