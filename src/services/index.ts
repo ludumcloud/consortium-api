@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { RepositoryModule } from '../repositories';
 import MapService from './MapService';
 import MatchService from './MatchService';
+import SearchService from './SearchService';
 
 @Module({
   imports: [
@@ -9,11 +10,13 @@ import MatchService from './MatchService';
   ],
   providers: [
     MapService,
-    MatchService
+    MatchService,
+    SearchService
   ],
   exports: [
     MapService,
-    MatchService
+    MatchService,
+    SearchService
   ]
 })
 class ServicesModule {}
@@ -21,5 +24,6 @@ class ServicesModule {}
 export {
   MatchService,
   MapService,
+  SearchService,
   ServicesModule
 };

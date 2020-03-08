@@ -3,15 +3,19 @@ import * as jwt from 'jsonwebtoken';
 import User from '../models/User';
 import UserRepository from '../repositories/UserRepository';
 import { LoginRequest, SignUpRequest } from '../schemas';
+import { SearchService } from '../services';
 import { createSalt, hashPassword, passwordEqual, signature } from '../utils/authenticationHelper';
 import logger from '../utils/log';
 
+// TODO: Rewrite auth controller to use services instead of logic living in controller
 @Controller('/v1/auth')
 export default class AuthController {
+  private readonly searchService: SearchService;
   private readonly userRepository: UserRepository;
 
-  constructor (userRepository: UserRepository) {
+  constructor (userRepository: UserRepository, searchService: SearchService) {
     this.userRepository = userRepository;
+    this.searchService = searchService;
   }
 
   @Post('/login')
@@ -59,6 +63,13 @@ export default class AuthController {
       user = await this.userRepository.createUser(email, username, salt, hashedPassword, name);
     } catch (error) {
       logger.error('Failed to create user when attempting signup', error);
+      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    try {
+      await this.searchService.addUserToIndex(user);
+    } catch (error) {
+      logger.error('Failed to add user to search index', error);
       throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

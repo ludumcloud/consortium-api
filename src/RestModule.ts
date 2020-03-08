@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import AuthController from './controllers/AuthController';
 import MatchController from './controllers/MatchController';
+import SearchController from './controllers/SearchController';
 import { RepositoryModule } from './repositories';
 import { ServicesModule } from './services';
 
@@ -11,7 +12,8 @@ import { ServicesModule } from './services';
   ],
   controllers: [
     AuthController,
-    MatchController
+    MatchController,
+    SearchController
   ]
 })
 export class RestModule {}
