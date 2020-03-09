@@ -27,10 +27,21 @@ export default class SearchService {
 
   public async searchUserByUsername (input: string): Promise<ElasticUserModel[]> {
     return this.searchRepository.search<ElasticUserModel>('user', {
-      fuzzy: {
-        username: {
-          value: input
-        }
+      bool: {
+        should: [
+          {
+            fuzzy: {
+              username: {
+                value: input
+              }
+            }
+          },
+          {
+            prefix: {
+              username: input
+            }
+          }
+        ]
       }
     });
   }
