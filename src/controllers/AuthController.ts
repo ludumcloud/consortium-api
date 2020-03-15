@@ -1,82 +1,42 @@
 import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
-import * as jwt from 'jsonwebtoken';
-import User from '../models/User';
-import UserRepository from '../repositories/UserRepository';
 import { LoginRequest, SignUpRequest } from '../schemas';
-import { SearchService } from '../services';
-import { createSalt, hashPassword, passwordEqual, signature } from '../utils/authenticationHelper';
-import logger from '../utils/log';
+import AuthService from '../services/AuthService';
+import { InvalidCredentialsException } from '../utils/errors';
 
-// TODO: Rewrite auth controller to use services instead of logic living in controller
 @Controller('/v1/auth')
 export default class AuthController {
-  private readonly searchService: SearchService;
-  private readonly userRepository: UserRepository;
+  private readonly authService: AuthService;
 
-  constructor (userRepository: UserRepository, searchService: SearchService) {
-    this.userRepository = userRepository;
-    this.searchService = searchService;
+  constructor (authService: AuthService) {
+    this.authService = authService;
   }
 
   @Post('/login')
-  public async login (@Body() body: LoginRequest): Promise<void> {
+  public async login (@Body() body: LoginRequest): Promise<string> {
     const { email, password } = body;
 
-    let userRecord: User;
+    let session: string;
     try {
-      userRecord = await this.userRepository.findByEmail(email);
+      session = await this.authService.loginUser(email, password);
     } catch (error) {
-      logger.error('Failed to fetch user when logging in', error);
+      if (error instanceof InvalidCredentialsException) {
+        throw new HttpException('Invalid username or password', HttpStatus.BAD_REQUEST);
+      }
       throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    if (!userRecord) {
-      throw new HttpException('Invalid username or password', HttpStatus.BAD_REQUEST);
-    }
-
-    const isEqual: boolean = await passwordEqual(password, userRecord.password, userRecord.salt);
-    if (!isEqual) {
-      throw new HttpException('Invalid username or password', HttpStatus.BAD_REQUEST);
-    }
-
-    const data: Record<string, string> = {
-      email: userRecord.email,
-      name: userRecord.name,
-      username: userRecord.username
-    };
-
-    return jwt.sign({ data }, signature, { expiresIn: '6h' });
+    return session;
   }
 
   @Post('/signup')
-  public async signUp (@Body() body: SignUpRequest): Promise<object> {
+  public async signUp (@Body() body: SignUpRequest): Promise<string> {
     const { username, email, password, name } = body;
 
-    let user = await this.userRepository.findByEmail(email);
-    if (user) {
-      throw new HttpException(`The following email address is not valid ${email}`, HttpStatus.BAD_REQUEST);
-    }
-    const salt = await createSalt();
-    const hashedPassword: string = await hashPassword(password, salt);
-
+    let session: string;
     try {
-      user = await this.userRepository.createUser(email, username, salt, hashedPassword, name);
+      session = await this.authService.createUser(email, username, name, password);
     } catch (error) {
-      logger.error('Failed to create user when attempting signup', error);
       throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
-    try {
-      await this.searchService.addUserToIndex(user);
-    } catch (error) {
-      logger.error('Failed to add user to search index', error);
-      throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    return {
-      email: user.email,
-      name: user.name,
-      username: user.username
-    };
+    return session;
   }
 }
