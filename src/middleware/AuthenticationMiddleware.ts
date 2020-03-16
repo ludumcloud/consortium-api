@@ -17,7 +17,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
     const token: string = bearer?.split(' ')[1];
 
     if (!token) {
-      next(new HttpException('Invalid username or password', HttpStatus.UNAUTHORIZED));
+      next(new HttpException('Missing authentication token', HttpStatus.UNAUTHORIZED));
     }
 
     let user: User;
@@ -25,7 +25,7 @@ export class AuthenticationMiddleware implements NestMiddleware {
       user = await this.authService.validateSession(token);
     } catch (error) {
       logger.debug('Failed to find user associated with token', error);
-      next(new HttpException('Invalid username or password', HttpStatus.UNAUTHORIZED));
+      next(new HttpException('Invalid authentication token', HttpStatus.UNAUTHORIZED));
     }
     req.user = user;
 

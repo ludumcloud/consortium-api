@@ -82,7 +82,7 @@ export default class AuthService {
       username: user.username
     };
 
-    return jwt.sign(payload, signature, { expiresIn: '6h' });
+    return jwt.sign({ data: payload } , signature, { expiresIn: '6h' });
   }
 
   public async validateSession (token: string): Promise<User> {
