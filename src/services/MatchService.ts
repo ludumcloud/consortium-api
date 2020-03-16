@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as _ from 'lodash';
 import Map from '../models/Map';
 import Match from '../models/Match';
 import Participant from '../models/Participant';
@@ -27,8 +28,10 @@ export default class MatchService {
     this.mapService = mapService;
   }
 
-  public async createMatch (participantIds: number[], mapOptions?: MapCreationOptions): Promise<Match> {
-    const users: User[] = await this.userRepository.fetchUsersById(participantIds);
+  public async createMatch (owner: number, participantIds: number[], mapOptions?: MapCreationOptions): Promise<Match> {
+    // add the owner to the list of participants
+    participantIds.push(owner);
+    const users: User[] = await this.userRepository.fetchUsersById(_.uniq(participantIds));
     const participants: Participant[] = await Promise.all(users.map((user) =>
       this.participantRepository.createParticipant(user)
     ));
@@ -45,7 +48,7 @@ export default class MatchService {
     return match;
   }
 
-  public async findAllMatches (): Promise<Match[]> {
-    return this.matchRepository.findMany();
+  public async findAllMatches (userId: number): Promise<Match[]> {
+    return this.matchRepository.findMany(userId);
   }
 }

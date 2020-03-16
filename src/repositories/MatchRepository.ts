@@ -24,7 +24,11 @@ export default class MatchRepository {
     return this.matchRepository.findOne(id);
   }
 
-  public async findMany (): Promise<Match[]> {
-    return this.matchRepository.find();
+  public async findMany (userId: number): Promise<Match[]> {
+    return await this.matchRepository.createQueryBuilder('match')
+      .leftJoinAndSelect('match.participants', 'participant')
+      .leftJoinAndSelect('participant.user', 'user')
+      .where('user.id = :userId', { userId })
+      .getMany();
   }
 }
