@@ -21,11 +21,14 @@ export class RestModule implements NestModule {
   configure (consumer: MiddlewareConsumer): any {
     consumer
       .apply(AuthenticationMiddleware)
-      .exclude({ path: '/v1/auth/(.*)', method: RequestMethod.ALL })
+      .exclude(
+  { path: '/v1/auth/login', method: RequestMethod.POST },
+          { path: '/v1/auth/signUp', method: RequestMethod.POST }
+        )
       .forRoutes(
 { path: '/v1/search', method: RequestMethod.ALL },
         { path: '/v1/match', method: RequestMethod.ALL },
-        { path: 'v1/auth/info', method: RequestMethod.GET }
+        { path: '/v1/auth/info', method: RequestMethod.GET }
       );
   }
 }
