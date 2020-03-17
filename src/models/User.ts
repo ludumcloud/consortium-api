@@ -16,11 +16,11 @@ export default class User {
   public email: string;
 
   @Exclude()
-  @Column()
+  @Column({ select: false })
   public password: string;
 
   @Exclude()
-  @Column()
+  @Column({ select: false })
   public salt: string;
 
   @Column()

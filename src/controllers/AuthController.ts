@@ -1,4 +1,6 @@
-import { Body, Controller, HttpException, HttpStatus, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, HttpException, HttpStatus, Post, UseInterceptors } from '@nestjs/common';
+import { UserParam } from '../decorators/UserDecorator';
+import User from '../models/User';
 import { LoginRequest, SignUpRequest } from '../schemas';
 import AuthService from '../services/AuthService';
 import { InvalidCredentialsException } from '../utils/errors';
@@ -38,5 +40,11 @@ export default class AuthController {
       throw new HttpException('Internal Server Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return session;
+  }
+
+  @Get('/info')
+  @UseInterceptors(ClassSerializerInterceptor)
+  public async info (@UserParam() user: User): Promise<User> {
+    return user;
   }
 }

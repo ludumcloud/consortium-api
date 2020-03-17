@@ -28,7 +28,7 @@ export default class AuthService {
   public async loginUser (email: string, password: string): Promise<string> {
     let userRecord: User;
     try {
-      userRecord = await this.userRepository.findByEmail(email);
+      userRecord = await this.userRepository.findByEmail(email, [ 'email', 'password', 'salt' ]);
     } catch (error) {
       logger.error('Failed to fetch user when logging in', error);
       throw error;

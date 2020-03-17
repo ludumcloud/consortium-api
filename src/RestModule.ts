@@ -24,7 +24,8 @@ export class RestModule implements NestModule {
       .exclude({ path: '/v1/auth/(.*)', method: RequestMethod.ALL })
       .forRoutes(
 { path: '/v1/search', method: RequestMethod.ALL },
-        { path: '/v1/match', method: RequestMethod.ALL }
+        { path: '/v1/match', method: RequestMethod.ALL },
+        { path: 'v1/auth/info', method: RequestMethod.GET }
       );
   }
 }
