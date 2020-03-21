@@ -26,8 +26,8 @@ export default class MatchRepository {
 
   public async findMany (userId: number): Promise<Match[]> {
     return await this.matchRepository.createQueryBuilder('match')
-      .leftJoinAndSelect('match.participants', 'participant')
-      .leftJoinAndSelect('participant.user', 'user')
+      .leftJoin('match.participants', 'participant')
+      .leftJoin('participant.user', 'user')
       .where('user.id = :userId', { userId })
       .getMany();
   }

@@ -49,6 +49,10 @@ export default class MatchService {
   }
 
   public async findAllMatches (userId: number): Promise<Match[]> {
-    return this.matchRepository.findMany(userId);
+    let matches: Match[] = await this.matchRepository.findMany(userId);
+    matches = await Promise.all(
+      matches.map(async (match: Match) => this.matchRepository.findMatch(match.id))
+    );
+    return matches;
   }
 }
