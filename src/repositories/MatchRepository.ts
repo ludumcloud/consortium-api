@@ -25,10 +25,15 @@ export default class MatchRepository {
   }
 
   public async findMany (userId: number): Promise<Match[]> {
-    return await this.matchRepository.createQueryBuilder('match')
+    // this query only returns the ids, not the actually matches, so we have to run another query
+    const matches: Match[] = await this.matchRepository.createQueryBuilder('match')
       .leftJoin('match.participants', 'participant')
       .leftJoin('participant.user', 'user')
       .where('user.id = :userId', { userId })
       .getMany();
+
+    return Promise.all(
+      matches.map((match: Match) => this.matchRepository.findOne(match.id))
+    );
   }
 }
