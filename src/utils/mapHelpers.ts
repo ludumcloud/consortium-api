@@ -40,7 +40,7 @@ export function generateTile (x: number, y: number, width: number, height: numbe
 }
 
 export function calculateBiome (elevation: number, moisture: number): Terrain {
-  if (elevation <= 0.15) {
+  if (elevation <= 0.18) {
     return buildDepressionsBiome(elevation);
   } else if (elevation <= .70) {
     return buildPlainsBiome(moisture);
@@ -56,7 +56,7 @@ function buildDepressionsBiome (elevation: number): Terrain {
 
   if (elevation <= 0.1) {
     depression.biome = Depressions.Ocean;
-  } else if (elevation <= 0.12) {
+  } else {
     depression.biome = Depressions.Beach;
   }
 
