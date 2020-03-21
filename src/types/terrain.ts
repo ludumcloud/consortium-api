@@ -1,22 +1,11 @@
 export enum Mountains {
   Bare = 'bare',
-  Rocky = 'rocky',
-  Tundra = 'tundra',
   Snow = 'snow'
 }
 
-export enum Hills {
-  Temperate = 'temperate',
-  Shrubland = 'shrubland',
-  RainForest = 'rainforest',
-  Forest = 'forest'
-}
-
 export enum Plains {
-  Temperate = 'temperate',
   Grassland = 'grassland',
   Forest = 'forest',
-  RainForest = 'rainforest'
 }
 
 export enum Depressions {
@@ -24,8 +13,8 @@ export enum Depressions {
   Ocean = 'ocean'
 }
 
-export type Landform = 'Mountain' | 'Hill' | 'Plain' | 'Depression';
-export type Biome = Mountains | Hills | Plains | Depressions;
+export type Landform = 'Mountain' | 'Plain' | 'Depression';
+export type Biome = Mountains | Plains | Depressions;
 
 export interface Terrain {
   landform: Landform;

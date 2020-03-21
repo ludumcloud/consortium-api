@@ -1,7 +1,7 @@
 import * as crypto from 'crypto';
 import * as util from 'util';
 import { TileCreationOptions } from '../repositories/TileRepository';
-import { Depressions, Hills, Mountains, Plains, Terrain } from '../types/terrain';
+import { Depressions, Mountains, Plains, Terrain } from '../types/terrain';
 import NoiseGenerator, { NoiseGeneratorOptions } from './NoiseGenerator';
 
 const randomBytes = util.promisify(crypto.randomBytes);
@@ -40,12 +40,10 @@ export function generateTile (x: number, y: number, width: number, height: numbe
 }
 
 export function calculateBiome (elevation: number, moisture: number): Terrain {
-  if (elevation <= 0.12) {
+  if (elevation <= 0.15) {
     return buildDepressionsBiome(elevation);
-  } else if (elevation <= .35) {
-    return buildPlainsBiome(moisture);
   } else if (elevation <= .70) {
-    return buildHillsBiome(moisture);
+    return buildPlainsBiome(moisture);
   } else {
     return buildMountainsBiome(moisture);
   }
@@ -70,33 +68,11 @@ function buildPlainsBiome (moisture: number): Terrain {
     landform: 'Plain'
   } as Terrain;
 
-  if (moisture < 0.16)
-    plain.biome = Plains.Temperate;
-  else if (moisture < 0.33)
+  if (moisture < 0.33)
     plain.biome = Plains.Grassland;
-  else if (moisture < 0.66)
+  else
     plain.biome = Plains.Forest;
-  else
-    plain.biome = Plains.RainForest;
-
   return plain;
-}
-
-function buildHillsBiome (moisture: number): Terrain {
-  const hill: Terrain = {
-    landform: 'Hill'
-  } as Terrain;
-
-  if (moisture < 0.16)
-    hill.biome = Hills.Temperate;
-  else if (moisture < 0.50)
-    hill.biome = Hills.Shrubland;
-  else if (moisture < 0.83)
-    hill.biome = Hills.Forest;
-  else
-    hill.biome = Hills.RainForest;
-
-  return hill;
 }
 
 function buildMountainsBiome (moisture: number): Terrain {
@@ -104,12 +80,8 @@ function buildMountainsBiome (moisture: number): Terrain {
     landform: 'Mountain'
   } as Terrain;
 
-  if (moisture < 0.1)
+  if (moisture < 0.5)
     mountain.biome = Mountains.Bare;
-  else if (moisture < 0.2)
-    mountain.biome = Mountains.Rocky;
-  else if (moisture < 0.5)
-    mountain.biome = Mountains.Tundra;
   else
     mountain.biome = Mountains.Snow;
 
