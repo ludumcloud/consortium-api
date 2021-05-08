@@ -33,7 +33,7 @@
     "rxjs": "^6.5.3",
     "simplex-noise": "^2.4.0",
     "sqlite3": "^4.1.0",
-    "typeorm": "^0.2.20",
+    "typeorm": "^0.2.25",
     "winston": "^3.2.1"
   },
   "devDependencies": {
